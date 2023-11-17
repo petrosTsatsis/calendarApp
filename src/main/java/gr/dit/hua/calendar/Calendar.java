@@ -4,7 +4,6 @@ import biweekly.Biweekly;
 import biweekly.ICalendar;
 import biweekly.component.VEvent;
 import biweekly.property.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,6 +16,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+import biweekly.util.Duration;
+import gr.hua.dit.oop2.calendar.TimeService;
+import gr.hua.dit.oop2.calendar.TimeTeller;
+
+
 public class Calendar {
 
     private List<VEvent> events;
@@ -26,13 +30,10 @@ public class Calendar {
     public Calendar(){}
 
     // this is the method that is called from the others to display each time the right events
-    public void displayEvents(List<VEvent> events, String message){
-
+    public void displayEvents(List<VEvent> events, String message) {
         System.out.println("\n*** " + message + " ***\n");
 
-        // get the important fields from each event and print them
         for (VEvent event : events) {
-
             Summary summary = event.getSummary();
             DateStart dtStart = event.getDateStart();
             DateEnd dtEnd = event.getDateEnd();
@@ -41,24 +42,27 @@ public class Calendar {
 
             System.out.println("--------------------");
             System.out.println("Title: " + summary.getValue());
-            System.out.println("Start Date: " + dtStart.getValue());
-            if (dtEnd!=null){
-                System.out.println("End Date: " + dtEnd.getValue());
-            }
-            if (status!=null){
-                System.out.println("Status: " + status.getValue());
-            }
             System.out.println("Description: " + description.getValue());
+            System.out.println("Start Date and Time: " + dtStart.getValue());
+            if (dtEnd != null) {
+                System.out.println("End Date and Time: " + dtEnd.getValue());
+            }
+            if (status != null) {
+                System.out.println("Status of the task: " + status.getValue());
+            }
             System.out.println("--------------------");
         }
-
     }
 
     // fetch the events from the current day
     public void displayDayEvents(String filePath) throws IOException {
         String content = readFile(filePath);
         ICalendar ical = Biweekly.parse(content).first();
-        LocalDateTime dateTimeNow = LocalDateTime.now();
+
+        // initialize the TimeTeller using the TimeService
+        TimeTeller timeTeller = TimeService.getTeller();
+        LocalDateTime dateTimeNow = timeTeller.now();
+
         events = new ArrayList<>();
 
         if (ical != null) {
@@ -71,9 +75,10 @@ public class Calendar {
                     events.add(event);
                 }
             }
+            TimeService.stop();
+
             // call the method that sorts the eventlist
             sortedEvents = EventLists.sortByStartDate(events);
-
             displayEvents(sortedEvents, "Today's events");
         } else {
             System.out.println("Invalid or empty iCal file.");
@@ -84,7 +89,11 @@ public class Calendar {
     public void displayWeekEvents(String filePath) throws IOException {
         String content = readFile(filePath);
         ICalendar ical = Biweekly.parse(content).first();
-        LocalDateTime dateTimeNow = LocalDateTime.now();
+
+        // initialize the TimeTeller using the TimeService
+        TimeTeller timeTeller = TimeService.getTeller();
+        LocalDateTime dateTimeNow = timeTeller.now();
+
         events = new ArrayList<>();
 
         if (ical != null) {
@@ -99,6 +108,8 @@ public class Calendar {
                     events.add(event);
                 }
             }
+            TimeService.stop();
+
             // call the method that sorts the eventlist
             sortedEvents = EventLists.sortByStartDate(events);
 
@@ -113,7 +124,11 @@ public class Calendar {
     public void displayMonthEvents(String filePath) throws IOException {
         String content = readFile(filePath);
         ICalendar ical = Biweekly.parse(content).first();
-        LocalDateTime dateTimeNow = LocalDateTime.now();
+
+        // initialize the TimeTeller using the TimeService
+        TimeTeller timeTeller = TimeService.getTeller();
+        LocalDateTime dateTimeNow = timeTeller.now();
+
         events = new ArrayList<>();
 
 
@@ -128,6 +143,8 @@ public class Calendar {
                     events.add(event);
                 }
             }
+            TimeService.stop();
+
             // call the method that sorts the eventlist
             sortedEvents = EventLists.sortByStartDate(events);
 
@@ -141,7 +158,11 @@ public class Calendar {
     public void displayPastDay(String filePath) throws IOException {
         String content = readFile(filePath);
         ICalendar ical = Biweekly.parse(content).first();
-        LocalDateTime dateTimeNow = LocalDateTime.now();
+
+        // initialize the TimeTeller using the TimeService
+        TimeTeller timeTeller = TimeService.getTeller();
+        LocalDateTime dateTimeNow = timeTeller.now();
+
         events = new ArrayList<>();
 
         if (ical != null){
@@ -154,6 +175,8 @@ public class Calendar {
                     events.add(event);
                 }
             }
+            TimeService.stop();
+
             // call the method that sorts the eventlist
             sortedEvents = EventLists.sortByStartDate(events);
 
@@ -167,7 +190,11 @@ public class Calendar {
     public void displayPastWeek(String filePath) throws IOException {
         String content = readFile(filePath);
         ICalendar ical = Biweekly.parse(content).first();
-        LocalDateTime dateTimeNow = LocalDateTime.now();
+
+        // initialize the TimeTeller using the TimeService
+        TimeTeller timeTeller = TimeService.getTeller();
+        LocalDateTime dateTimeNow = timeTeller.now();
+
         events = new ArrayList<>();
 
         if (ical != null){
@@ -180,6 +207,8 @@ public class Calendar {
                     events.add(event);
                 }
             }
+            TimeService.stop();
+
             // call the method that sorts the eventlist
             sortedEvents = EventLists.sortByStartDate(events);
 
@@ -193,7 +222,11 @@ public class Calendar {
     public void displayPastMonth(String filePath) throws IOException {
         String content = readFile(filePath);
         ICalendar ical = Biweekly.parse(content).first();
-        LocalDateTime dateTimeNow = LocalDateTime.now();
+
+        // initialize the TimeTeller using the TimeService
+        TimeTeller timeTeller = TimeService.getTeller();
+        LocalDateTime dateTimeNow = timeTeller.now();
+
         events = new ArrayList<>();
 
         if (ical != null){
@@ -206,6 +239,8 @@ public class Calendar {
                     events.add(event);
                 }
             }
+            TimeService.stop();
+
             // call the method that sorts the eventlist
             sortedEvents = EventLists.sortByStartDate(events);
 
@@ -219,7 +254,11 @@ public class Calendar {
     public void displayToDoEvents(String filePath) throws IOException {
         String content = readFile(filePath);
         ICalendar ical = Biweekly.parse(content).first();
-        LocalDateTime dateTimeNow = LocalDateTime.now();
+
+        // initialize the TimeTeller using the TimeService
+        TimeTeller timeTeller = TimeService.getTeller();
+        LocalDateTime dateTimeNow = timeTeller.now();
+
         events = new ArrayList<>();
 
         if (ical != null){
@@ -237,6 +276,8 @@ public class Calendar {
                     }
                 }
             }
+            TimeService.stop();
+
             // call the method that sorts the eventlist
             sortedEvents = EventLists.sortByStartDate(events);
 
@@ -251,7 +292,11 @@ public class Calendar {
     public void displayDueEvents(String filePath) throws IOException {
         String content = readFile(filePath);
         ICalendar ical = Biweekly.parse(content).first();
-        LocalDateTime dateTimeNow = LocalDateTime.now();
+
+        // initialize the TimeTeller using the TimeService
+        TimeTeller timeTeller = TimeService.getTeller();
+        LocalDateTime dateTimeNow = timeTeller.now();
+
         events = new ArrayList<>();
 
         if (ical != null){
@@ -269,6 +314,8 @@ public class Calendar {
                     }
                 }
             }
+            TimeService.stop();
+
             // call the method that sorts the eventlist
             sortedEvents = EventLists.sortByStartDate(events);
 
@@ -312,7 +359,15 @@ public class Calendar {
 
             // title of the event
             System.out.print("Enter a title for the event: ");
-            event.setSummary(scanner.nextLine());
+            String title = scanner.nextLine();
+
+            // keep prompting until a non-null and non-empty title is provided
+            while (title == null || title.trim().isEmpty()) {
+                System.out.print("Please enter a non-empty title for the event: ");
+                title = scanner.nextLine();
+            }
+
+            event.setSummary(title);
 
             // description of the event
             System.out.print("Enter a description for the event: ");
@@ -337,7 +392,7 @@ public class Calendar {
 
             // end date for the events that need it (tasks, appointments)
             System.out.print("Enter the end date and time of the event (optionally, press Enter to skip): ");
-            String endDateTimeStr = scanner.nextLine();
+            String endDateTimeStr = scanner.nextLine().trim();
 
             if (!endDateTimeStr.isEmpty()) {
                 boolean validEndDate = false;
@@ -349,6 +404,7 @@ public class Calendar {
                         validEndDate = true;
                     } catch (DateTimeParseException e) {
                         System.err.print("Error parsing date and time. Please enter the correct format (yyyy-MM-dd HH:mm --> year-month-day hours:minutes): ");
+                        endDateTimeStr = scanner.nextLine().trim();
                     }
                 }
 
@@ -357,23 +413,21 @@ public class Calendar {
 
             // status for the events that need it (tasks)
             System.out.print("Enter the status of the event in case it is a task (C for Completed, N for Not Completed, or press Enter to skip): ");
-            String status = scanner.nextLine().toUpperCase();
+            String status = scanner.nextLine().trim().toUpperCase();
 
-            boolean validStatus = false;
-
-            while (!validStatus) {
-
-                if (!status.equals("C") && !status.equals("N")) {
+            if (!status.isEmpty()) {
+                while (!(status.equals("C") || status.equals("N"))) {
                     System.out.print("Please select one of the two options for the status of the event: 'C' / 'N' ");
-                    status = scanner.nextLine().toUpperCase();
-                } else {
-                    validStatus = true;
+                    status = scanner.nextLine().trim().toUpperCase();
                 }
-            }
-            if ("C".equals(status)) {
-                event.setStatus(Status.create("Completed"));
+
+                if ("C".equals(status)) {
+                    event.setStatus(Status.create("Completed"));
+                } else {
+                    event.setStatus(Status.create("Not Completed"));
+                }
             } else {
-                event.setStatus(Status.create("Not Completed"));
+                event.setStatus(null);
             }
 
             // add the new event to the iCalendar
