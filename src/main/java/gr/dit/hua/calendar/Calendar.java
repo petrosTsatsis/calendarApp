@@ -16,7 +16,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-import biweekly.util.Duration;
 import gr.hua.dit.oop2.calendar.TimeService;
 import gr.hua.dit.oop2.calendar.TimeTeller;
 
@@ -66,14 +65,22 @@ public class Calendar {
         events = new ArrayList<>();
 
         if (ical != null) {
-            System.out.println("Events in the iCal file:");
 
             for (VEvent event : ical.getEvents()) {
                 LocalDateTime eventStartDateTime = convertDateStartToLocalDateTime(event.getDateStart());
 
-                if (eventStartDateTime.toLocalDate().isEqual(dateTimeNow.toLocalDate())) {
-                    events.add(event);
+                if (event.getDateEnd() != null){
+                    LocalDateTime eventEndDateTime = convertDateEndToLocalDateTime(event.getDateEnd());
+
+                    if (eventStartDateTime.toLocalDate().isEqual(dateTimeNow.toLocalDate()) || eventEndDateTime.toLocalDate().isEqual(dateTimeNow.toLocalDate())) {
+                        events.add(event);
+                    }
+                }else{
+                    if (eventStartDateTime.toLocalDate().isEqual(dateTimeNow.toLocalDate())) {
+                        events.add(event);
+                    }
                 }
+
             }
             TimeService.stop();
 
@@ -98,14 +105,22 @@ public class Calendar {
 
         if (ical != null) {
 
-            LocalDateTime startOfWeek = dateTimeNow.with(dateTimeNow.getDayOfWeek()).withHour(0).withMinute(0).withSecond(0).withNano(0);
+            LocalDateTime startDate = dateTimeNow.with(dateTimeNow.getDayOfWeek()).withHour(0).withMinute(0).withSecond(0).withNano(0);
             LocalDateTime endOfWeek = dateTimeNow.with(DayOfWeek.SUNDAY).plusDays(1).withHour(23).withMinute(59).withSecond(59);
 
             for (VEvent event : ical.getEvents()) {
                 LocalDateTime eventStartDateTime = convertDateStartToLocalDateTime(event.getDateStart());
 
-                if (eventStartDateTime.isAfter(startOfWeek) && eventStartDateTime.isBefore(endOfWeek) ) {
-                    events.add(event);
+                if(event.getDateEnd() != null){
+                    LocalDateTime eventEndDateTime = convertDateEndToLocalDateTime(event.getDateEnd());
+
+                    if ((eventStartDateTime.isAfter(startDate) && eventStartDateTime.isBefore(endOfWeek)) || (eventEndDateTime.isAfter(startDate) && eventStartDateTime.isBefore(endOfWeek)) ) {
+                        events.add(event);
+                    }
+                }else{
+                    if ((eventStartDateTime.isAfter(startDate) && eventStartDateTime.isBefore(endOfWeek))) {
+                        events.add(event);
+                    }
                 }
             }
             TimeService.stop();
@@ -133,14 +148,22 @@ public class Calendar {
 
 
         if (ical != null) {
-            LocalDateTime startOfMonth = dateTimeNow.withDayOfMonth(dateTimeNow.getDayOfMonth()).withHour(0).withMinute(0).withSecond(0).withNano(0);
+            LocalDateTime startDate = dateTimeNow.withDayOfMonth(dateTimeNow.getDayOfMonth()).withHour(0).withMinute(0).withSecond(0).withNano(0);
             LocalDateTime endOfMonth = dateTimeNow.withDayOfMonth(dateTimeNow.getMonth().length(dateTimeNow.toLocalDate().isLeapYear())).withHour(23).withMinute(59).withSecond(59);
 
             for (VEvent event : ical.getEvents()) {
                 LocalDateTime eventStartDateTime = convertDateStartToLocalDateTime(event.getDateStart());
 
-                if (eventStartDateTime.isAfter(startOfMonth) && eventStartDateTime.isBefore(endOfMonth) ) {
-                    events.add(event);
+                if (event.getDateEnd() != null) {
+                    LocalDateTime eventEndDateTime = convertDateEndToLocalDateTime(event.getDateEnd());
+
+                    if ((eventStartDateTime.isAfter(startDate) && eventStartDateTime.isBefore(endOfMonth)) || (eventEndDateTime.isAfter(startDate) && eventEndDateTime.isBefore(endOfMonth)) ) {
+                        events.add(event);
+                    }
+                }else{
+                    if ((eventStartDateTime.isAfter(startDate) && eventStartDateTime.isBefore(endOfMonth)) ) {
+                        events.add(event);
+                    }
                 }
             }
             TimeService.stop();
@@ -171,8 +194,16 @@ public class Calendar {
             for (VEvent event : ical.getEvents()) {
                 LocalDateTime eventStartDateTime = convertDateStartToLocalDateTime(event.getDateStart());
 
-                if (eventStartDateTime.isAfter(startOfDay) && eventStartDateTime.isBefore(dateTimeNow) ) {
-                    events.add(event);
+                if(event.getDateEnd() != null){
+                    LocalDateTime eventEndDateTime = convertDateEndToLocalDateTime(event.getDateEnd());
+
+                    if ((eventStartDateTime.isAfter(startOfDay) && eventStartDateTime.isBefore(dateTimeNow)) || (eventEndDateTime.isAfter(startOfDay) && eventEndDateTime.isBefore(dateTimeNow)) ) {
+                        events.add(event);
+                    }
+                }else{
+                    if ((eventStartDateTime.isAfter(startOfDay) && eventStartDateTime.isBefore(dateTimeNow)) ) {
+                        events.add(event);
+                    }
                 }
             }
             TimeService.stop();
@@ -203,8 +234,15 @@ public class Calendar {
             for (VEvent event : ical.getEvents()) {
                 LocalDateTime eventStartDateTime = convertDateStartToLocalDateTime(event.getDateStart());
 
-                if (eventStartDateTime.isAfter(startOfWeek) && eventStartDateTime.isBefore(dateTimeNow) ) {
-                    events.add(event);
+                if(event.getDateEnd() != null){
+                    LocalDateTime eventEndDateTime = convertDateEndToLocalDateTime(event.getDateEnd());
+                    if ((eventStartDateTime.isAfter(startOfWeek) && eventStartDateTime.isBefore(dateTimeNow) || (eventEndDateTime.isAfter(startOfWeek) && eventEndDateTime.isBefore(dateTimeNow))) ) {
+                        events.add(event);
+                    }
+                }else{
+                    if (eventStartDateTime.isAfter(startOfWeek) && eventStartDateTime.isBefore(dateTimeNow) ) {
+                        events.add(event);
+                    }
                 }
             }
             TimeService.stop();
@@ -235,9 +273,18 @@ public class Calendar {
             for (VEvent event : ical.getEvents()) {
                 LocalDateTime eventStartDateTime = convertDateStartToLocalDateTime(event.getDateStart());
 
-                if (eventStartDateTime.isAfter(startOfMonth) && eventStartDateTime.isBefore(dateTimeNow) ) {
-                    events.add(event);
+                if(event.getDateEnd() != null){
+                    LocalDateTime eventEndDateTime = convertDateEndToLocalDateTime(event.getDateEnd());
+
+                    if ((eventStartDateTime.isAfter(startOfMonth) && eventStartDateTime.isBefore(dateTimeNow) || (eventEndDateTime.isAfter(startOfMonth) && eventEndDateTime.isBefore(dateTimeNow))) ) {
+                        events.add(event);
+                    }
+                }else{
+                    if (eventStartDateTime.isAfter(startOfMonth) && eventStartDateTime.isBefore(dateTimeNow) ) {
+                        events.add(event);
+                    }
                 }
+
             }
             TimeService.stop();
 
@@ -339,9 +386,9 @@ public class Calendar {
         // check if the file exists and if not create it
         if (!file.exists()) {
             Files.createFile(file.toPath());
-            System.out.println("The file created: " + file);
+            System.out.println("\nCreated the file: " + file);
         } else {
-            System.out.println("The file exists: " + filePath);
+            System.out.println("\nOpened the file: " + filePath);
         }
 
         // parse the ical file and if the calendar is null create one
@@ -358,23 +405,23 @@ public class Calendar {
             System.out.println("\nCreating a new Event ... ");
 
             // title of the event
-            System.out.print("Enter a title for the event: ");
+            System.out.print("\n-Enter a title for the event: ");
             String title = scanner.nextLine();
 
             // keep prompting until a non-null and non-empty title is provided
             while (title == null || title.trim().isEmpty()) {
-                System.out.print("Please enter a non-empty title for the event: ");
+                System.out.print("-Please enter a non-empty title for the event: ");
                 title = scanner.nextLine();
             }
 
             event.setSummary(title);
 
             // description of the event
-            System.out.print("Enter a description for the event: ");
+            System.out.print("-Enter a description for the event: ");
             event.setDescription(scanner.nextLine());
 
             // start date of the event
-            System.out.print("Enter the start date and time of the event (yyyy-MM-dd HH:mm): ");
+            System.out.print("-Enter the start date and time of the event (yyyy-MM-dd HH:mm): ");
             boolean validStartDate = false;
             LocalDateTime startDateTime = null;
 
@@ -391,7 +438,7 @@ public class Calendar {
             event.setDateStart(new DateStart(Date.from(startDateTime.atZone(java.time.ZoneId.systemDefault()).toInstant())));
 
             // end date for the events that need it (tasks, appointments)
-            System.out.print("Enter the end date and time of the event (optionally, press Enter to skip): ");
+            System.out.print("-Enter the end date and time of the event (optionally, press Enter to skip): ");
             String endDateTimeStr = scanner.nextLine().trim();
 
             if (!endDateTimeStr.isEmpty()) {
@@ -412,7 +459,7 @@ public class Calendar {
             }
 
             // status for the events that need it (tasks)
-            System.out.print("Enter the status of the event in case it is a task (C for Completed, N for Not Completed, or press Enter to skip): ");
+            System.out.print("-Enter the status of the event in case it is a task (C for Completed, N for Not Completed, or press Enter to skip): ");
             String status = scanner.nextLine().trim().toUpperCase();
 
             if (!status.isEmpty()) {
