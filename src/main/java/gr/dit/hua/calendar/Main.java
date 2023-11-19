@@ -26,28 +26,28 @@ public class Main {
             if(args.length == 2) {
                 switch (args[0]) {
                     case "day":
-                        calendar.displayDayEvents(filePath);
+                        calendar.findDayEvents(filePath);
                         break;
                     case "week":
-                        calendar.displayWeekEvents(filePath);
+                        calendar.findWeekEvents(filePath);
                         break;
                     case "month":
-                        calendar.displayMonthEvents(filePath);
+                        calendar.findMonthEvents(filePath);
                         break;
                     case "pastday":
-                        calendar.displayPastDay(filePath);
+                        calendar.findPastDay(filePath);
                         break;
                     case "pastweek":
-                        calendar.displayPastWeek(filePath);
+                        calendar.findPastWeek(filePath);
                         break;
                     case "pastmonth":
-                        calendar.displayPastMonth(filePath);
+                        calendar.findPastMonth(filePath);
                         break;
                     case "todo":
-                        calendar.displayToDoEvents(filePath);
+                        calendar.findToDoEvents(filePath);
                         break;
                     case "due":
-                        calendar.displayDueEvents(filePath);
+                        calendar.findDueEvents(filePath);
                         break;
                     default:
                         System.out.println("Invalid input. Please try one of the following as the first argument if you want to view events:");

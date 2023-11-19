@@ -54,7 +54,7 @@ public class Calendar {
     }
 
     // fetch the events from the current day
-    public void displayDayEvents(String filePath) throws IOException {
+    public void findDayEvents(String filePath) throws IOException {
         String content = readFile(filePath);
         ICalendar ical = Biweekly.parse(content).first();
 
@@ -93,7 +93,7 @@ public class Calendar {
     }
 
     // view the events from the current day till the end of the week
-    public void displayWeekEvents(String filePath) throws IOException {
+    public void findWeekEvents(String filePath) throws IOException {
         String content = readFile(filePath);
         ICalendar ical = Biweekly.parse(content).first();
 
@@ -136,7 +136,7 @@ public class Calendar {
     }
 
     // view the events from the current month
-    public void displayMonthEvents(String filePath) throws IOException {
+    public void findMonthEvents(String filePath) throws IOException {
         String content = readFile(filePath);
         ICalendar ical = Biweekly.parse(content).first();
 
@@ -178,7 +178,7 @@ public class Calendar {
     }
 
     // display the events from the start of the day till now
-    public void displayPastDay(String filePath) throws IOException {
+    public void findPastDay(String filePath) throws IOException {
         String content = readFile(filePath);
         ICalendar ical = Biweekly.parse(content).first();
 
@@ -218,7 +218,7 @@ public class Calendar {
     }
 
     // display the events from the start of the week till now
-    public void displayPastWeek(String filePath) throws IOException {
+    public void findPastWeek(String filePath) throws IOException {
         String content = readFile(filePath);
         ICalendar ical = Biweekly.parse(content).first();
 
@@ -257,7 +257,7 @@ public class Calendar {
     }
 
     // display the events from the start of the month till now
-    public void displayPastMonth(String filePath) throws IOException {
+    public void findPastMonth(String filePath) throws IOException {
         String content = readFile(filePath);
         ICalendar ical = Biweekly.parse(content).first();
 
@@ -298,7 +298,7 @@ public class Calendar {
     }
 
     // display the events that are task which are not completed and the deadline has not expired
-    public void displayToDoEvents(String filePath) throws IOException {
+    public void findToDoEvents(String filePath) throws IOException {
         String content = readFile(filePath);
         ICalendar ical = Biweekly.parse(content).first();
 
@@ -336,7 +336,7 @@ public class Calendar {
     }
 
     // display the events that are "tasks" which are not completed and the deadline has expired
-    public void displayDueEvents(String filePath) throws IOException {
+    public void findDueEvents(String filePath) throws IOException {
         String content = readFile(filePath);
         ICalendar ical = Biweekly.parse(content).first();
 
