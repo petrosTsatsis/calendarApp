@@ -14,7 +14,7 @@ the following maven dependencies :
 
 To run the app you have 2 main functionalities : 
 
-1) View the events of calendar base on : day-week-month-pastday-pastweek-pastmonth-due-todo
+1) View the events of calendar based on : day-week-month-pastday-pastweek-pastmonth-due-todo
    For example let's assume the .ics file is named as mycal.ics, go to your project directory and run :
    ```bash
    java -jar target/CalendarApp-1.0-SNAPSHOT.jar day mycal.ics
@@ -30,7 +30,7 @@ To run the app you have 2 main functionalities :
 3) Create a new Calendar and add events to it or if the Calendar already exists update it with the new events. To do so go to your
    project directory (again for this example the file's name is mycal.ics don't forget to use your own file name instead) and run :
    ```bash
-   java -jar target/CalendarApp-1.0-SNAPSHOT.jar day mycal.ics
+   java -jar target/CalendarApp-1.0-SNAPSHOT.jar mycal.ics
    ```
    now you provide only the name of the .ics file if it is inside your project folder otherwise again you need to use the
    absolute path. No need for other arguments, if the file does not exist the app will create it and add the events you create
