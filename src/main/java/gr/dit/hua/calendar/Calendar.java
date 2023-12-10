@@ -85,15 +85,21 @@ public class Calendar {
         if (ical != null) {
 
             for (VEvent event : ical.getEvents()) {
+                // get the start date and time of the event
                 LocalDateTime eventStartDateTime = convertDateStartToLocalDateTime(event.getDateStart());
 
+                // check if the end date of the event is null which means that it's a simple event and not an appointment
                 if (event.getDateEnd() != null) {
+                    // get the end date and time of the event
                     LocalDateTime eventEndDateTime = convertDateEndToLocalDateTime(event.getDateEnd());
 
-                    if (eventStartDateTime.toLocalDate().isEqual(dateTimeNow.toLocalDate()) || eventEndDateTime.toLocalDate().isEqual(dateTimeNow.toLocalDate())) {
+                    // check if the event start or end date is equal with the current and add the event in the events list
+                    if (eventStartDateTime.toLocalDate().isEqual(dateTimeNow.toLocalDate()) ||
+                            eventEndDateTime.toLocalDate().isEqual(dateTimeNow.toLocalDate())) {
                         events.add(event);
                     }
                 } else {
+                    // check only if the start date (the end date might be null because it's optional)
                     if (eventStartDateTime.toLocalDate().isEqual(dateTimeNow.toLocalDate())) {
                         events.add(event);
                     }
@@ -101,17 +107,20 @@ public class Calendar {
 
             }
             for (VTodo task : ical.getTodos()) {
+                // get the Due date of the task
                 LocalDateTime taskDueDateTime = convertDateDueToLocalDateTime(task.getDateDue());
-
+                // check if the due date is equal to the current date and add the task in the tasks list
                 if (taskDueDateTime.toLocalDate().isEqual(dateTimeNow.toLocalDate())) {
                     tasks.add(task);
                 }
             }
+            // stop the time service from the timeteller
             TimeService.stop();
 
             // call the method that sorts the eventlist and tasklist
             sortedEvents = EventLists.sortByDate(events);
             sortedTasks = EventLists.sortByDate(tasks);
+            // call the method that display the sorted lists
             displayEvents(sortedEvents, sortedTasks, "Today's events");
         } else {
             System.out.println("Invalid or empty iCal file.");
@@ -132,37 +141,51 @@ public class Calendar {
 
         if (ical != null) {
 
-            LocalDateTime startDate = dateTimeNow.with(dateTimeNow.getDayOfWeek()).withHour(dateTimeNow.getHour()).withMinute(dateTimeNow.getMinute())
-                    .withSecond(dateTimeNow.getSecond());
+            // set the start date and time as the current date and time
+            LocalDateTime startDate = dateTimeNow.with(dateTimeNow.getDayOfWeek()).withHour(dateTimeNow.getHour())
+                    .withMinute(dateTimeNow.getMinute()).withSecond(dateTimeNow.getSecond());
+
+            // set the end date and Sunday
             LocalDateTime endOfWeek = dateTimeNow.with(DayOfWeek.SUNDAY).plusDays(1).withHour(23).withMinute(59).withSecond(59);
 
             for (VEvent event : ical.getEvents()) {
+                // get the start date and time of the event
                 LocalDateTime eventStartDateTime = convertDateStartToLocalDateTime(event.getDateStart());
 
+                // check if the end date of the event is null which means that it's a simple event and not an appointment
                 if (event.getDateEnd() != null) {
+                    // get the end date and time of the event
                     LocalDateTime eventEndDateTime = convertDateEndToLocalDateTime(event.getDateEnd());
 
-                    if ((eventStartDateTime.isAfter(startDate) && eventStartDateTime.isBefore(endOfWeek)) || (eventEndDateTime.isAfter(startDate) && eventStartDateTime.isBefore(endOfWeek))) {
+                    /* check if the event start or end date is after our start date and before Sunday and
+                     add the event in the events list */
+                    if ((eventStartDateTime.isAfter(startDate) && eventStartDateTime.isBefore(endOfWeek)) ||
+                            (eventEndDateTime.isAfter(startDate) && eventStartDateTime.isBefore(endOfWeek))) {
                         events.add(event);
                     }
                 } else {
+                    // check only if the start date (the end date might be null because it's optional)
                     if ((eventStartDateTime.isAfter(startDate) && eventStartDateTime.isBefore(endOfWeek))) {
                         events.add(event);
                     }
                 }
             }
             for (VTodo task : ical.getTodos()) {
+                // get the Due date of the task
                 LocalDateTime taskDueDateTime = convertDateDueToLocalDateTime(task.getDateDue());
-
+                /* check if the task due date is after our start date and before Sunday and
+                     add the task in the tasks list */
                 if (taskDueDateTime.isAfter(startDate) && taskDueDateTime.isBefore(endOfWeek)) {
                     tasks.add(task);
                 }
             }
+            // stop the time service from the timeteller
             TimeService.stop();
 
-            // call the method that sorts the eventlist
+            // call the method that sorts the eventlist and tasklist
             sortedEvents = EventLists.sortByDate(events);
             sortedTasks = EventLists.sortByDate(tasks);
+            // call the method that display the sorted lists
             displayEvents(sortedEvents, sortedTasks, "Weeks's events");
         } else {
             System.out.println("Invalid or empty iCal file.");
@@ -182,37 +205,51 @@ public class Calendar {
         tasks = new ArrayList<>();
 
         if (ical != null) {
+            // set the start date and time as the current date and time
             LocalDateTime startDate = dateTimeNow.withDayOfMonth(dateTimeNow.getDayOfMonth()).withHour(dateTimeNow.getHour())
                     .withMinute(dateTimeNow.getMinute()).withSecond(dateTimeNow.getSecond());
-            LocalDateTime endOfMonth = dateTimeNow.withDayOfMonth(dateTimeNow.getMonth().length(dateTimeNow.toLocalDate().isLeapYear())).withHour(23).withMinute(59).withSecond(59);
+            // set the end date as the last day of the month
+            LocalDateTime endOfMonth = dateTimeNow.withDayOfMonth(dateTimeNow.getMonth().length(dateTimeNow.toLocalDate()
+                    .isLeapYear())).withHour(23).withMinute(59).withSecond(59);
 
             for (VEvent event : ical.getEvents()) {
+                // get the start date and time of the event
                 LocalDateTime eventStartDateTime = convertDateStartToLocalDateTime(event.getDateStart());
 
+                // check if the end date of the event is null which means that it's a simple event and not an appointment
                 if (event.getDateEnd() != null) {
+                    // get the end date and time of the event
                     LocalDateTime eventEndDateTime = convertDateEndToLocalDateTime(event.getDateEnd());
 
-                    if ((eventStartDateTime.isAfter(startDate) && eventStartDateTime.isBefore(endOfMonth)) || (eventEndDateTime.isAfter(startDate) && eventEndDateTime.isBefore(endOfMonth))) {
+                    /* check if the event start or end date is after our start date and before the last day of the month
+                     and add the event in the events list */
+                    if ((eventStartDateTime.isAfter(startDate) && eventStartDateTime.isBefore(endOfMonth)) ||
+                            (eventEndDateTime.isAfter(startDate) && eventEndDateTime.isBefore(endOfMonth))) {
                         events.add(event);
                     }
                 } else {
+                    // check only if the start date (the end date might be null because it's optional)
                     if ((eventStartDateTime.isAfter(startDate) && eventStartDateTime.isBefore(endOfMonth))) {
                         events.add(event);
                     }
                 }
             }
             for (VTodo task : ical.getTodos()) {
+                // get the Due date of the task
                 LocalDateTime taskDueDateTime = convertDateDueToLocalDateTime(task.getDateDue());
-
+                /* check if the task due date is after our start date and before the last day of the month and
+                    add the task in the tasks list */
                 if (taskDueDateTime.isAfter(startDate) && taskDueDateTime.isBefore(endOfMonth)) {
                     tasks.add(task);
                 }
             }
+            // stop the time service from the timeteller
             TimeService.stop();
 
-            // call the method that sorts the eventlist
+            // call the method that sorts the eventlist and tasklist
             sortedEvents = EventLists.sortByDate(events);
             sortedTasks = EventLists.sortByDate(tasks);
+            // call the method that display the sorted lists
             displayEvents(sortedEvents, sortedTasks, "Month's events");
         } else {
             System.out.println("Invalid or empty iCal file.");
@@ -231,35 +268,49 @@ public class Calendar {
         tasks = new ArrayList<>();
 
         if (ical != null) {
-            LocalDateTime startOfDay = dateTimeNow.withDayOfMonth(dateTimeNow.getDayOfMonth()).withHour(0).withMinute(0).withSecond(0).withNano(0);
+
+            LocalDateTime startOfDay = dateTimeNow.withDayOfMonth(dateTimeNow.getDayOfMonth()).withHour(0).withMinute(0)
+                    .withSecond(0).withNano(0);
 
             for (VEvent event : ical.getEvents()) {
+                // get the start date and time of the event
                 LocalDateTime eventStartDateTime = convertDateStartToLocalDateTime(event.getDateStart());
 
+                // check if the end date of the event is null which means that it's a simple event and not an appointment
                 if (event.getDateEnd() != null) {
+                    // get the end date and time of the event
                     LocalDateTime eventEndDateTime = convertDateEndToLocalDateTime(event.getDateEnd());
 
-                    if ((eventStartDateTime.isAfter(startOfDay) && eventStartDateTime.isBefore(dateTimeNow)) || (eventEndDateTime.isAfter(startOfDay) && eventEndDateTime.isBefore(dateTimeNow))) {
+                    /* check if the event start or end date is after the start of the day and before the current time
+                    and add the event in the events list */
+                    if ((eventStartDateTime.isAfter(startOfDay) && eventStartDateTime.isBefore(dateTimeNow)) ||
+                            (eventEndDateTime.isAfter(startOfDay) && eventEndDateTime.isBefore(dateTimeNow))) {
                         events.add(event);
                     }
                 } else {
+                    // check only if the start date (the end date might be null because it's optional)
                     if ((eventStartDateTime.isAfter(startOfDay) && eventStartDateTime.isBefore(dateTimeNow))) {
                         events.add(event);
                     }
                 }
             }
             for (VTodo task : ical.getTodos()) {
+                // get the Due date of the task
                 LocalDateTime taskDueDateTime = convertDateDueToLocalDateTime(task.getDateDue());
 
+                /* check if the task due date is after the start of the day and before the current time and
+                    add the task in the tasks list */
                 if (taskDueDateTime.isAfter(startOfDay) && taskDueDateTime.isBefore(dateTimeNow)) {
                     tasks.add(task);
                 }
             }
+            // stop the time service from the timeteller
             TimeService.stop();
 
-            // call the method that sorts the eventlist
+            // call the method that sorts the eventlist and tasklist
             sortedEvents = EventLists.sortByDate(events);
             sortedTasks = EventLists.sortByDate(tasks);
+            // call the method that display the sorted lists
             displayEvents(sortedEvents, sortedTasks, "Pastday's events");
         } else {
             System.out.println("Invalid or empty iCal file.");
@@ -278,34 +329,49 @@ public class Calendar {
         tasks = new ArrayList<>();
 
         if (ical != null) {
-            LocalDateTime startOfWeek = dateTimeNow.with(DayOfWeek.MONDAY).withHour(0).withMinute(0).withSecond(0).withNano(0);
+            // set the start date and time as Monday
+            LocalDateTime startOfWeek = dateTimeNow.with(DayOfWeek.MONDAY).withHour(0).withMinute(0)
+                    .withSecond(0).withNano(0);
 
             for (VEvent event : ical.getEvents()) {
+                // get the start date and time of the event
                 LocalDateTime eventStartDateTime = convertDateStartToLocalDateTime(event.getDateStart());
 
+                // check if the end date of the event is null which means that it's a simple event and not an appointment
                 if (event.getDateEnd() != null) {
+                    // get the end date and time of the event
                     LocalDateTime eventEndDateTime = convertDateEndToLocalDateTime(event.getDateEnd());
-                    if ((eventStartDateTime.isAfter(startOfWeek) && eventStartDateTime.isBefore(dateTimeNow) || (eventEndDateTime.isAfter(startOfWeek) && eventEndDateTime.isBefore(dateTimeNow)))) {
+
+                    /* check if the event start or end date is after Monday and before the current time
+                     and add the event in the events list */
+                    if ((eventStartDateTime.isAfter(startOfWeek) && eventStartDateTime.isBefore(dateTimeNow) ||
+                            (eventEndDateTime.isAfter(startOfWeek) && eventEndDateTime.isBefore(dateTimeNow)))) {
                         events.add(event);
                     }
                 } else {
+                    // check only if the start date (the end date might be null because it's optional)
                     if (eventStartDateTime.isAfter(startOfWeek) && eventStartDateTime.isBefore(dateTimeNow)) {
                         events.add(event);
                     }
                 }
             }
             for (VTodo task : ical.getTodos()) {
+                // get the Due date of the task
                 LocalDateTime taskDueDateTime = convertDateDueToLocalDateTime(task.getDateDue());
 
+                /* check if the task due date is after Monday and before the current time and
+                    add the task in the tasks list */
                 if (taskDueDateTime.isAfter(startOfWeek) && taskDueDateTime.isBefore(dateTimeNow)) {
                     tasks.add(task);
                 }
             }
+            // stop the time service from the timeteller
             TimeService.stop();
 
-            // call the method that sorts the eventlist
+            // call the method that sorts the eventlist and tasklist
             sortedEvents = EventLists.sortByDate(events);
             sortedTasks = EventLists.sortByDate(tasks);
+            // call the method that display the sorted lists
             displayEvents(sortedEvents, sortedTasks, "Pastweek's events");
         } else {
             System.out.println("Invalid or empty iCal file.");
@@ -324,18 +390,25 @@ public class Calendar {
         tasks = new ArrayList<>();
 
         if (ical != null) {
+            // set the start date and time as the first day of the month
             LocalDateTime startOfMonth = dateTimeNow.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
 
             for (VEvent event : ical.getEvents()) {
+                // get the start date and time of the event
                 LocalDateTime eventStartDateTime = convertDateStartToLocalDateTime(event.getDateStart());
 
+                // check if the end date of the event is null which means that it's a simple event and not an appointment
                 if (event.getDateEnd() != null) {
+                    // get the end date and time of the event
                     LocalDateTime eventEndDateTime = convertDateEndToLocalDateTime(event.getDateEnd());
 
+                    /* check if the event start or end date is after the first day of the month and before
+                     the current time and add the event in the events list */
                     if ((eventStartDateTime.isAfter(startOfMonth) && eventStartDateTime.isBefore(dateTimeNow) || (eventEndDateTime.isAfter(startOfMonth) && eventEndDateTime.isBefore(dateTimeNow)))) {
                         events.add(event);
                     }
                 } else {
+                    // check only if the start date (the end date might be null because it's optional)
                     if (eventStartDateTime.isAfter(startOfMonth) && eventStartDateTime.isBefore(dateTimeNow)) {
                         events.add(event);
                     }
@@ -343,17 +416,22 @@ public class Calendar {
 
             }
             for (VTodo task : ical.getTodos()) {
+                // get the Due date of the task
                 LocalDateTime taskDueDateTime = convertDateDueToLocalDateTime(task.getDateDue());
 
+                /* check if the task due date is after the first day of the month and before
+                    the current time and add the task in the tasks list */
                 if (taskDueDateTime.isAfter(startOfMonth) && taskDueDateTime.isBefore(dateTimeNow)) {
                     tasks.add(task);
                 }
             }
+            // stop the time service from the timeteller
             TimeService.stop();
 
-            // call the method that sorts the eventlist
+            // call the method that sorts the eventlist and tasklist
             sortedEvents = EventLists.sortByDate(events);
             sortedTasks = EventLists.sortByDate(tasks);
+            // call the method that display the sorted lists
             displayEvents(sortedEvents, sortedTasks, "Pastmonth's events");
         } else {
             System.out.println("Invalid or empty iCal file.");
@@ -378,6 +456,7 @@ public class Calendar {
                 if (task.getStatus() != null && (task.getStatus().getValue().equals("IN-PROGRESS"))) {
 
                     if (task.getDateDue() != null) {
+                        // get the Due date of the task
                         LocalDateTime taskDueDateTime = convertDateDueToLocalDateTime(task.getDateDue());
                         // check if the task's dateTime is after the current
                         if (dateTimeNow.isBefore(taskDueDateTime)) {
@@ -386,11 +465,13 @@ public class Calendar {
                     }
                 }
             }
+            // stop the time service from the timeteller
             TimeService.stop();
 
-            // call the method that sorts the eventlist
+            // call the method that sorts the eventlist and tasklist
             sortedEvents = EventLists.sortByDate(events);
             sortedTasks = EventLists.sortByDate(tasks);
+            // call the method that display the sorted lists
             displayEvents(sortedEvents, sortedTasks, "Todo tasks");
         } else {
             System.out.println("Invalid or empty iCal file.");
@@ -416,6 +497,7 @@ public class Calendar {
                 if (task.getStatus() != null && (task.getStatus().getValue().equals("IN-PROGRESS"))) {
 
                     if (task.getDateDue() != null) {
+                        // get the Due date of the task
                         LocalDateTime taskDueDateTime = convertDateDueToLocalDateTime(task.getDateDue());
                         // check if the task's dateTime is after the current
                         if (dateTimeNow.isAfter(taskDueDateTime)) {
@@ -424,11 +506,13 @@ public class Calendar {
                     }
                 }
             }
+            // stop the time service from the timeteller
             TimeService.stop();
 
-            // call the method that sorts the eventlist
+            // call the method that sorts the eventlist and tasklist
             sortedEvents = EventLists.sortByDate(events);
             sortedTasks = EventLists.sortByDate(tasks);
+            // call the method that display the sorted lists
             displayEvents(sortedEvents, sortedTasks, "Due events");
         } else {
             System.out.println("Invalid or empty iCal file.");

@@ -7,7 +7,7 @@ public class Main {
         Calendar calendar = new Calendar();
         String filePath = "";
 
-        // check length of the given arguments
+        // check the length of the given arguments
         if (args.length > 2) {
             System.out.println("Please do not provide more than two arguments.");
             System.exit(1);
