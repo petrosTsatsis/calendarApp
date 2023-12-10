@@ -13,7 +13,7 @@ public class Main {
             System.exit(1);
         } else if (args.length == 2) {
             filePath = args[1];
-        }else {
+        } else {
             filePath = args[0];
         }
 
@@ -23,7 +23,7 @@ public class Main {
             if (!filePath.endsWith(".ics")) {
                 throw new IllegalArgumentException("Please provide an iCal file (with extension .ics).");
             }
-            if(args.length == 2) {
+            if (args.length == 2) {
                 switch (args[0]) {
                     case "day":
                         calendar.findDayEvents(filePath);
