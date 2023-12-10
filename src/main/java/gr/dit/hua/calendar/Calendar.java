@@ -391,7 +391,8 @@ public class Calendar {
 
         if (ical != null) {
             // set the start date and time as the first day of the month
-            LocalDateTime startOfMonth = dateTimeNow.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+            LocalDateTime startOfMonth = dateTimeNow.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0)
+                    .withNano(0);
 
             for (VEvent event : ical.getEvents()) {
                 // get the start date and time of the event
@@ -404,7 +405,8 @@ public class Calendar {
 
                     /* check if the event start or end date is after the first day of the month and before
                      the current time and add the event in the events list */
-                    if ((eventStartDateTime.isAfter(startOfMonth) && eventStartDateTime.isBefore(dateTimeNow) || (eventEndDateTime.isAfter(startOfMonth) && eventEndDateTime.isBefore(dateTimeNow)))) {
+                    if ((eventStartDateTime.isAfter(startOfMonth) && eventStartDateTime.isBefore(dateTimeNow) ||
+                            (eventEndDateTime.isAfter(startOfMonth) && eventEndDateTime.isBefore(dateTimeNow)))) {
                         events.add(event);
                     }
                 } else {
@@ -585,10 +587,12 @@ public class Calendar {
                 while (!validStartDate) {
                     try {
                         String startDateTimeStr = scanner.nextLine();
-                        startDateTime = LocalDateTime.parse(startDateTimeStr, java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+                        startDateTime = LocalDateTime.parse(startDateTimeStr, java.time.format.DateTimeFormatter
+                                .ofPattern("yyyy-MM-dd HH:mm"));
                         validStartDate = true;
                     } catch (DateTimeParseException e) {
-                        System.err.print("Error parsing date and time. Please enter the correct format (yyyy-MM-dd HH:mm --> year-month-day hours:minutes): ");
+                        System.err.print("Error parsing date and time. Please enter the correct format " +
+                                "(yyyy-MM-dd HH:mm --> year-month-day hours:minutes): ");
                     }
                 }
 
@@ -604,10 +608,12 @@ public class Calendar {
 
                     while (!validEndDate) {
                         try {
-                            endDateTime = LocalDateTime.parse(endDateTimeStr, java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+                            endDateTime = LocalDateTime.parse(endDateTimeStr, java.time.format.DateTimeFormatter
+                                    .ofPattern("yyyy-MM-dd HH:mm"));
                             validEndDate = true;
                         } catch (DateTimeParseException e) {
-                            System.err.print("Error parsing date and time. Please enter the correct format (yyyy-MM-dd HH:mm --> year-month-day hours:minutes): ");
+                            System.err.print("Error parsing date and time. Please enter the correct format " +
+                                    "(yyyy-MM-dd HH:mm --> year-month-day hours:minutes): ");
                             endDateTimeStr = scanner.nextLine().trim();
                         }
                     }
@@ -651,10 +657,12 @@ public class Calendar {
                 while (!validDueDate) {
                     try {
                         String dueDateTimeStr = scanner.nextLine();
-                        dueDateTime = LocalDateTime.parse(dueDateTimeStr, java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+                        dueDateTime = LocalDateTime.parse(dueDateTimeStr, java.time.format.DateTimeFormatter
+                                .ofPattern("yyyy-MM-dd HH:mm"));
                         validDueDate = true;
                     } catch (DateTimeParseException e) {
-                        System.err.print("Error parsing date and time. Please enter the correct format (yyyy-MM-dd HH:mm --> year-month-day hours:minutes): ");
+                        System.err.print("Error parsing date and time. Please enter the correct format " +
+                                "(yyyy-MM-dd HH:mm --> year-month-day hours:minutes): ");
                     }
                 }
 
